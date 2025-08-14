@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lumina RP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #00fff7;
+      --primary-dark: #00c9b8;
+      --bg: #0f0f17;
+      --panel: #181825;
+      --input-bg: #22223a;
+      --input-focus: #00fff7;
+      --text: #e0e0e0;
+      --shadow: 0 0 20px #00fff799, 0 0 2px #00fff7;
+      --radius: 22px;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+    body {
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+      position: relative;
+    }
+    #stars-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      background: transparent;
+    }
+    .site-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      width: 100vw;
+    }
+    header {
+      text-align: center;
+      padding: 2.2rem 1rem 1.2rem 1rem;
+      width: 100%;
+      margin-bottom: .5rem;
+    }
+    .title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      text-shadow: 0 0 18px var(--primary);
+      margin-bottom: 0.3rem;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .slogan {
+      font-size: 1.1rem;
+      color: #aafcfb;
+      font-style: italic;
+      margin-bottom: 1.3rem;
+      animation: fadeInOut 8s ease-in-out infinite;
+      font-family: 'Montserrat', sans-serif;
+    }
+    @keyframes fadeInOut {
+      0%, 100% {opacity: 0.6;}
+      50% {opacity: 1;}
+    }
+    .map-code-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .map-code-label {
+      color: #aafcfb;
+      font-size: 1rem;
+      margin-right: 0.3rem;
+      font-weight: 500;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .map-code {
+      font-family: 'Montserrat', monospace;
+      font-size: 1.1rem;
+      background: var(--input-bg);
+      color: var(--primary);
+      border-radius: 12px;
+      padding: 0.5rem 1.1rem;
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+      user-select: all;
+      font-weight: bold;
+    }
+    .copy-btn {
+      background: var(--primary);
+      color: #181825;
+      border: none;
+      border-radius: 12px;
+      padding: 0.5rem 1.1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 12px var(--primary-dark);
+      overflow: hidden;
+      position: relative;
+    }
+    .copy-btn:active {
+      background: var(--primary-dark);
+      color: #fff;
+      box-shadow: 0 0 18px var(--primary-dark);
+    }
+
+    /* CONTENEUR PRINCIPAL : FLEX POUR ALIGNER FORMULAIRE ET FONCTIONNALITÉS */
+    .main-content {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto 2.2rem auto;
+      padding: 0 1rem;
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    /* FONCTIONNALITÉS */
+    .features-card {
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: 0 0 32px #00fff733, 0 0 2px #00fff7;
+      padding: 2rem 1.5rem 1.2rem 1.5rem;
+      border: 1.5px solid #00fff744;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1 1 400px;
+      min-width: 320px;
+      max-width: 460px;
+      animation: popIn 1s cubic-bezier(.2,1.4,.6,.9);
+    }
+    .features-card h2 {
+      color: var(--primary);
+      text-shadow: 0 0 10px var(--primary);
+      font-size: 1.25rem;
+      text-align: center;
+      margin-bottom: 1.1rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .features-list {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .feature-item {
+      background: var(--input-bg);
+      border-radius: 14px;
+      padding: 0.8rem 1rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #66fff7dd;
+      box-shadow: 0 0 10px #00fff7aa;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      transition: transform 0.3s, box-shadow 0.3s, color 0.3s;
+      cursor: default;
+      user-select: none;
+      justify-content: center;
+    }
+    .feature-item:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 0 18px #00fff7ff;
+      color: var(--primary);
+    }
+    .feature-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      font-size: 1.3rem;
+      margin-right: 0.3rem;
+      filter: drop-shadow(0 0 4px #00fff7cc);
+    }
+
+    /* FORMULAIRE MODERNE */
+    .form-card {
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: 0 0 32px #00fff733, 0 0 2px #00fff7;
+      padding: 2.3rem 1.5rem 1.7rem 1.5rem;
+      flex: 1 1 400px;
+      min-width: 320px;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 1.5px solid #00fff744;
+      position: relative;
+      animation: popIn 1.1s cubic-bezier(.2,1.4,.6,.9);
+    }
+    .form-card h2 {
+      color: var(--primary);
+      text-shadow: 0 0 10px var(--primary);
+      font-size: 1.25rem;
+      text-align: center;
+      margin-bottom: 1.2rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      align-items: center;
+    }
+    .form-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 0;
+    }
+    label {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+      font-size: 1rem;
+      letter-spacing: 0.01em;
+      font-family: 'Montserrat', sans-serif;
+    }
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 1rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+      transition: border 0.3s, box-shadow 0.3s;
+      outline: none;
+      box-shadow: 0 0 0px var(--primary);
+      box-sizing: border-box;
+    }
+    input[type="text"]:focus, select:focus, textarea:focus {
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 12px var(--primary);
+      background: #1c1c2b;
+    }
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg fill='cyan' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1.1rem;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+    textarea {
+      min-height: 80px;
+      max-height: 200px;
+      resize: vertical;
+    }
+    .submit-btn {
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      color: #181825;
+      border: none;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 1rem 0;
+      margin-top: 0.5rem;
+      cursor: pointer;
+      box-shadow: 0 0 18px var(--primary-dark);
+      transition: background 0.25s, color 0.2s, box-shadow 0.2s, transform 0.09s;
+      overflow: hidden;
+      position: relative;
+      outline: none;
+      width: 100%;
+    }
+    .submit-btn:active {
+      transform: scale(0.96);
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+      color: #fff;
+    }
+    .submit-btn .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      background: rgba(0,255,247,0.5);
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes ripple {
+      to {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+    #formStatus {
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+      min-height: 1.4rem;
+      user-select: none;
+      color: var(--primary);
+      text-shadow: 0 0 6px var(--primary-dark);
+      letter-spacing: 0.01em;
+    }
+
+    /* SOCIALS */
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 1.7rem;
+      margin: 2.3rem 0 1.5rem 0;
+      font-size: 2.2rem;
+    }
+    .socials a {
+      background: var(--panel);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px var(--primary-dark);
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+    .socials a svg {
+      width: 26px;
+      height: 26px;
+      display: block;
+    }
+    .socials a img {
+      width: 26px;
+      height: 26px;
+      display: block;
+      filter: drop-shadow(0 0 8px #5865F2);
+    }
+    .socials a.youtube svg { fill: #ff0000; }
+    .socials a.tiktok svg { fill: #fff; }
+    .socials a:hover {
+      background: var(--primary);
+      box-shadow: 0 0 20px var(--primary);
+      transform: scale(1.13);
+    }
+    .socials a.youtube:hover svg { filter: drop-shadow(0 0 8px #ff0000); }
+    .socials a.tiktok:hover svg { filter: drop-shadow(0 0 8px #fff); }
+    .socials a.discord:hover img { filter: drop-shadow(0 0 16px #5865F2); }
+
+    @media (max-width: 960px) {
+      .main-content {
+        flex-direction: column;
+        max-width: 98vw;
+        padding: 0 1rem;
+      }
+      .features-card, .form-card {
+        max-width: 100%;
+        min-width: auto;
+      }
+    }
+    @media (max-width: 600px) {
+      .title { font-size: 1.5rem; }
+      .features-card h2, .form-card h2 { font-size: 1.05rem; }
+      .socials { font-size: 1.3rem; gap: 1rem; }
+      .socials a { width: 38px; height: 38px; }
+      .socials a svg, .socials a img { width: 20px; height: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="stars-bg"></canvas>
+  <div class="site-content">
+    <header>
+      <div class="title">Lumina RP</div>
+      <div class="slogan">L'expérience Fortnite RP ultime, une ville vivante, une communauté soudée.</div>
+      <div class="map-code-container">
+        <span class="map-code-label">Code de la map&nbsp;:</span>
+        <span class="map-code" id="mapCode">0000-0000-0000</span>
+        <button class="copy-btn" id="copyBtn">Copier</button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Fonctionnalités -->
+      <section class="features-card">
+        <h2>Fonctionnalités de la map</h2>
+        <ul class="features-list">
+          <li class="feature-item"><span class="feature-icon">🏙️</span>Ville interactive et immersive</li>
+          <li class="feature-item"><span class="feature-icon">💼</span>Métiers et emplois variés</li>
+          <li class="feature-item"><span class="feature-icon">🚗</span>Véhicules et garages personnalisés</li>
+          <li class="feature-item"><span class="feature-icon">🏦</span>Braquages et missions spéciales</li>
+          <li class="feature-item"><span class="feature-icon">🏠</span>Achat/vente de propriétés</li>
+          <li class="feature-item"><span class="feature-icon">📈</span>Économie dynamique</li>
+          <li class="feature-item"><span class="feature-icon">👮</span>Police et justice RP</li>
+          <li class="feature-item"><span class="feature-icon">🎉</span>Événements réguliers</li>
+          <li class="feature-item"><span class="feature-icon">🤝</span>Communauté active et bienveillante</li>
+          <li class="feature-item"><span class="feature-icon">🔊</span>Chat vocal intégré</li>
+          <li class="feature-item"><span class="feature-icon">🆕</span>Mises à jour fréquentes</li>
+        </ul>
+      </section>
+
+      <!-- Formulaire -->
+      <section class="form-card">
+        <h2>Contacte le staff</h2>
+        <form id="contactForm" novalidate>
+          <div class="form-group">
+            <label for="discord">Pseudo Discord <span style="color:#ff3b3b;">*</span></label>
+            <input type="text" id="discord" name="discord" placeholder="ex: pseudo#0000" required autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label for="fortnite">Pseudo Fortnite <span style="color:#ff3b3b;">*</span></label>
+            <input type="text" id="fortnite" name="fortnite" placeholder="Votre pseudo Fortnite" required autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label for="category">Catégorie <span style="color:#ff3b3b;">*</span></label>
+            <select id="category" name="category" required>
+              <option value="" disabled selected>Choisir une catégorie</option>
+              <option value="Problème technique">🛠️ Problème technique</option>
+              <option value="Problème session">🕹️ Problème session</option>
+              <option value="Signaler un joueur">🚨 Signaler un joueur</option>
+              <option value="Recrutement">📝 Recrutement</option>
+              <option value="Autre">❓ Autre</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Votre demande <span style="color:#ff3b3b;">*</span></label>
+            <textarea id="message" name="message" placeholder="Expliquez votre demande" required></textarea>
+          </div>
+          <button class="submit-btn" type="submit">Envoyer</button>
+          <div id="formStatus" role="alert" aria-live="polite"></div>
+        </form>
+      </section>
+    </main>
+
+    <nav class="socials" aria-label="Réseaux sociaux Lumina RP">
+      <a href="https://www.youtube.com/channel/UCe8i7AZaoyUEZMGv4dTqp6Q" class="youtube" target="_blank" title="YouTube Lumina RP" aria-label="YouTube">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a2.988 2.988 0 0 0-2.101-2.112C19.185 3.5 12 3.5 12 3.5s-7.185 0-9.397.574A2.988 2.988 0 0 0 .502 6.186C0 8.407 0 12 0 12s0 3.593.502 5.814a2.988 2.988 0 0 0 2.101 2.112C4.815 20.5 12 20.5 12 20.5s7.185 0 9.397-.574a2.988 2.988 0 0 0 2.101-2.112C24 15.593 24 12 24 12s0-3.593-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </a>
+      <a href="https://www.tiktok.com/@lumina_rp" class="tiktok" target="_blank" title="TikTok Lumina RP" aria-label="TikTok">
+        <svg viewBox="0 0 32 32"><path d="M28.7 10.3c-2.1 0-4.1-0.7-5.7-2V20.7c0 5.1-4.1 9.3-9.3 9.3S4.3 25.8 4.3 20.7s4.1-9.3 9.3-9.3c0.4 0 0.8 0 1.2 0.1V16c-0.4-0.1-0.8-0.1-1.2-0.1-2.6 0-4.7 2.1-4.7 4.7s2.1 4.7 4.7 4.7 4.7-2.1 4.7-4.7V2.7h4.6c0.2 2.7 2.4 4.8 5.1 4.8v2.8z"/></svg>
+      </a>
+      <a href="https://discord.gg/luminarp" class="discord" target="_blank" title="Discord Lumina RP" aria-label="Discord">
+        <img src="https://upload.wikimedia.org/wikipedia/fr/thumb/4/4f/Discord_Logo_sans_texte.svg/1818px-Discord_Logo_sans_texte.svg.png" alt="Discord" />
+      </a>
+    </nav>
+  </div>
+  <script>
+    // Fond étoilé dynamique
+    function starColor() {
+      return "rgba(0,255,247," + (0.7 + Math.random() * 0.3) + ")";
+    }
+    function drawStars() {
+      const canvas = document.getElementById('stars-bg');
+      const ctx = canvas.getContext('2d');
+      let w = window.innerWidth, h = window.innerHeight;
+      canvas.width = w; canvas.height = h;
+      ctx.clearRect(0, 0, w, h);
+      let stars = Math.floor(w * h / 1200);
+      for (let i = 0; i < stars; i++) {
+        let x = Math.random() * w;
+        let y = Math.random() * h;
+        let r = Math.random() * 1.2 + 0.3;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, 2 * Math.PI, false);
+        ctx.fillStyle = starColor();
+        ctx.shadowColor = "#00fff7";
+        ctx.shadowBlur = 8 + Math.random() * 8;
+        ctx.fill();
+      }
+    }
+    window.addEventListener('resize', drawStars);
+    window.addEventListener('DOMContentLoaded', drawStars);
+
+    // Copier le code map
+    document.getElementById('copyBtn').onclick = function() {
+      const code = document.getElementById('mapCode').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        this.textContent = "Copié !";
+        this.disabled = true;
+        setTimeout(() => {
+          this.textContent = "Copier";
+          this.disabled = false;
+        }, 1700);
+      });
+    };
+
+    // Effet bouton ripple sur le bouton envoyer
+    document.querySelector('.submit-btn').addEventListener('click', function(e) {
+      const btn = this;
+      const circle = document.createElement("span");
+      const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+      const radius = diameter / 2;
+      circle.style.width = circle.style.height = `${diameter}px`;
+      circle.style.left = `${e.clientX - btn.getBoundingClientRect().left - radius}px`;
+      circle.style.top = `${e.clientY - btn.getBoundingClientRect().top - radius}px`;
+      circle.classList.add("ripple");
+      btn.appendChild(circle);
+      setTimeout(() => circle.remove(), 600);
+    });
+
+    // Cooldown 5 minutes (300000 ms) entre envois, stocké en localStorage
+    const COOLDOWN_KEY = 'lumina_rp_form_cooldown';
+    const COOLDOWN_MS = 5 * 60 * 1000;
+
+    function canSendForm() {
+      const lastSent = localStorage.getItem(COOLDOWN_KEY);
+      if (!lastSent) return true;
+      const elapsed = Date.now() - Number(lastSent);
+      return elapsed > COOLDOWN_MS;
+    }
+
+    function getRemainingCooldown() {
+      const lastSent = localStorage.getItem(COOLDOWN_KEY);
+      if (!lastSent) return 0;
+      const elapsed = Date.now() - Number(lastSent);
+      return Math.max(0, COOLDOWN_MS - elapsed);
+    }
+
+    function formatTime(ms) {
+      const totalSeconds = Math.ceil(ms / 1000);
+      const m = Math.floor(totalSeconds / 60);
+      const s = totalSeconds % 60;
+      return `${m}m${s < 10 ? '0' : ''}${s}s`;
+    }
+
+    const form = document.getElementById('contactForm');
+    const status = document.getElementById('formStatus');
+
+    // Affiche le cooldown si actif au chargement
+    function updateCooldownMessage() {
+      if (!canSendForm()) {
+        const remaining = getRemainingCooldown();
+        status.textContent = `Veuillez patienter ${formatTime(remaining)} avant d'envoyer une nouvelle demande.`;
+        status.style.color = '#ffb347';
+        return false;
+      } else {
+        status.textContent = '';
+        return true;
+      }
+    }
+    updateCooldownMessage();
+
+    // Met à jour le message cooldown chaque seconde si actif
+    let cooldownInterval;
+    function startCooldownInterval() {
+      cooldownInterval = setInterval(() => {
+        if (canSendForm()) {
+          status.textContent = '';
+          clearInterval(cooldownInterval);
+        } else {
+          const remaining = getRemainingCooldown();
+          status.textContent = `Veuillez patienter ${formatTime(remaining)} avant d'envoyer une nouvelle demande.`;
+          status.style.color = '#ffb347';
+        }
+      }, 1000);
+    }
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      if (!canSendForm()) {
+        updateCooldownMessage();
+        return;
+      }
+
+      const discord = this.discord.value.trim();
+      const fortnite = this.fortnite.value.trim();
+      const category = this.category.value;
+      const message = this.message.value.trim();
+
+      if(!discord || !fortnite || !category || !message) {
+        status.textContent = "Merci de remplir tous les champs obligatoires.";
+        status.style.color = "#ff3b3b";
+        return;
+      }
+
+      status.textContent = "Envoi en cours...";
+      status.style.color = "var(--primary)";
+
+      const emojis = {
+        "Problème technique": "🛠️",
+        "Problème session": "🕹️",
+        "Signaler un joueur": "🚨",
+        "Recrutement": "📝",
+        "Autre": "❓"
+      };
+
+      const payload = {
+        username: "Gestion Support Site", // Nom du webhook
+        embeds: [{
+          title: `${emojis[category] || ""} Nouvelle demande via le site`,
+          color: 0x00fff7,
+          fields: [
+            {name: "Pseudo Discord", value: discord, inline: true},
+            {name: "Pseudo Fortnite", value: fortnite, inline: true},
+            {name: "Catégorie", value: `${emojis[category] || ""} ${category}`, inline: true},
+            {name: "Message", value: message}
+          ],
+          timestamp: new Date().toISOString(),
+          footer: {text: "Lumina RP - Formulaire web"}
+        }]
+      };
+
+      try {
+        const resp = await fetch("https://discord.com/api/webhooks/1371135623053967370/waterVoY1psB38R48x1jaiVTiuPA8UCJjA2jWUOdxhcYn2JKGYKgKPEZbns2RUgSNwlG", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(payload)
+        });
+        if(resp.ok) {
+          status.textContent = "Votre demande a bien été envoyée !";
+          status.style.color = "#4efc5d";
+          this.reset();
+          localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
+          startCooldownInterval();
+        } else {
+          status.textContent = "Erreur lors de l'envoi. Merci de réessayer.";
+          status.style.color = "#ff3b3b";
+        }
+      } catch {
+        status.textContent = "Erreur réseau. Merci de réessayer.";
+        status.style.color = "#ff3b3b";
+      }
+    });
+  </script>
+</body>
+</html>
